@@ -65,3 +65,33 @@ class BasicAuth(Auth):
             if user.is_valid_password(user_pwd):
                 return user
             return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """ Overrides Auth and retrieves User instance for request """
+
+        # Retrieve auth header from the request using Auth method
+        auth_header = self.authorization_header(request)
+
+        # Decode auth header value, get user data using Basic Auth methods
+        b64_header = self.extract_base64_authorization_header(auth_header)
+        decoded_header = self.decode_base64_authorization_header(b64_header)
+        user_creds = self.extract_user_credentials(decoded_header)
+        return self.user_object_from_credentials(*user_creds)
+#!/usr/bin/env python3
+""" Main 6
+"""
+import base64
+from api.v1.auth.basic_auth import BasicAuth
+from models.user import User
+
+""" Create a user test """
+user_email = "bob@hbtn.io"
+user_clear_pwd = "H0lbertonSchool98!"
+user = User()
+user.email = user_email
+user.password = user_clear_pwd
+print("New user: {} / {}".format(user.id, user.display_name()))
+user.save()
+
+basic_clear = "{}:{}".format(user_email, user_clear_pwd)
+print("Basic Base64: {}".format(base64.b64encode(basic_clear.encode('utf-8')).decode("utf-8")))
