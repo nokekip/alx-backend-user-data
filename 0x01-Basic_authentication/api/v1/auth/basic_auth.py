@@ -21,10 +21,10 @@ class BasicAuth(Auth):
         if authorization_header and isinstance(
                 authorization_header, str) and authorization_header.startswith(
                     "Basic "):
-            return authorization_header[6:] 
+            return authorization_header[6:]
 
-    def decode_base64_authorization_header(self,
-                                           base64_authorization_header: str) -> str:
+    def decode_base64_authorization_header(
+            self, base64_authorization_header: str) -> str:
         """
         Decodes a base64 string
         """
